@@ -1,4 +1,4 @@
-package ru.azzgzz.parking.entity;
+package ru.azzgzz.parking;
 
 public class Ticket {
     private final int ticketId;

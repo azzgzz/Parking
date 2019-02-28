@@ -1,4 +1,4 @@
-package ru.azzgzz.parking.entity;
+package ru.azzgzz.parking;
 
 import java.util.Arrays;
 import java.util.Scanner;
