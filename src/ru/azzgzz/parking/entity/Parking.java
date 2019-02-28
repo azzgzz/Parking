@@ -10,8 +10,7 @@ public class Parking {
 
     private final int capacity;
     private AtomicInteger carCountNow;
-    private ConcurrentHashMap.KeySetView<Ticket, Boolean> freeTickets;
-    private ConcurrentHashMap.KeySetView<Ticket, Boolean> fillTickets;
+    private ConcurrentHashMap.KeySetView<Ticket, Boolean> allTickets;
     private AtomicInteger totalCarCount;
     private final int timeDriveIn;
 
@@ -20,10 +19,9 @@ public class Parking {
         this.timeDriveIn = timeDriveIn;
         carCountNow = new AtomicInteger(0);
         totalCarCount = new AtomicInteger(0);
-        freeTickets = ConcurrentHashMap.newKeySet(capacity);
-        fillTickets = ConcurrentHashMap.newKeySet(capacity);
+        allTickets = ConcurrentHashMap.newKeySet(capacity);
         for (int i = 0; i < capacity; i++) {
-            freeTickets.add(new Ticket(i + 1));
+            allTickets.add(new Ticket(i + 1));
         }
     }
 
@@ -32,24 +30,11 @@ public class Parking {
      */
     public Ticket askTicket(Car car) {
 
-        Ticket t = null;
-//        if (carCountNow.intValue() < capacity) {
-//            carCountNow.incrementAndGet();
-//            t = freeTickets.stream()
-//                    .filter(Ticket::isFree)
-//                    .collect(Collectors.toSet())
-//                    .iterator()
-//                    .next();
-//            totalCarCount.incrementAndGet();
-//            t.setFree(false);
-//            t.setCarLineNumber(totalCarCount.intValue());
-//            t.setCarName(car.getName());
-//            fillTickets.add(t);
-//        }
-
+        Ticket t;
+//
         if (carCountNow.intValue() < capacity) {
 
-            Iterator<Ticket> ticketIterator = freeTickets.iterator();
+            Iterator<Ticket> ticketIterator = allTickets.iterator();
 
             while (ticketIterator.hasNext()) {
                 t = ticketIterator.next();
@@ -66,8 +51,11 @@ public class Parking {
         return null;
     }
 
-    public void returnTicket(Ticket ticket) {
-
+    public void returnTicket(int ticketId) {
+        Ticket ticket = (Ticket) allTickets.stream().filter(i -> i.getTicketId() == ticketId).toArray()[0];
+        ticket.setArrived(false);
+        ticket.setFree(true);
+        carCountNow.decrementAndGet();
     }
 
     public void arrivedNotify(Ticket ticket) {
@@ -76,17 +64,17 @@ public class Parking {
 
 
     public int getCarCountNow() {
-        return (int) freeTickets.stream()
+        return (int) allTickets.stream()
                 .filter(Ticket::isArrived)
                 .count();
     }
 
-    public Set<Ticket> getFreeTickets() {
-        return freeTickets;
+    public Set<Ticket> getAllTickets() {
+        return allTickets;
     }
 
     public Set<Ticket> getArrivedCarsSet() {
-        return freeTickets.stream().filter(Ticket::isArrived).collect(Collectors.toSet());
+        return allTickets.stream().filter(Ticket::isArrived).collect(Collectors.toSet());
     }
 
     public AtomicInteger getTotalCarCount() {
@@ -95,5 +83,9 @@ public class Parking {
 
     public int getTimeDriveIn() {
         return timeDriveIn;
+    }
+
+    public int getCapacity() {
+        return capacity;
     }
 }
