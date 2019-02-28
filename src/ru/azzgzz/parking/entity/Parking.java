@@ -1,4 +1,4 @@
-package ru.azzgzz.parking;
+package ru.azzgzz.parking.entity;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -31,7 +31,7 @@ public class Parking {
     public Ticket askTicket(Car car) {
 
         Ticket t;
-//
+
         if (carCountNow.intValue() < capacity) {
 
             Iterator<Ticket> ticketIterator = allTickets.iterator();
@@ -62,23 +62,14 @@ public class Parking {
         ticket.setArrived(true);
     }
 
-
     public int getCarCountNow() {
         return (int) allTickets.stream()
                 .filter(Ticket::isArrived)
                 .count();
     }
 
-    public Set<Ticket> getAllTickets() {
-        return allTickets;
-    }
-
     public Set<Ticket> getArrivedCarsSet() {
         return allTickets.stream().filter(Ticket::isArrived).collect(Collectors.toSet());
-    }
-
-    public AtomicInteger getTotalCarCount() {
-        return totalCarCount;
     }
 
     public int getTimeDriveIn() {

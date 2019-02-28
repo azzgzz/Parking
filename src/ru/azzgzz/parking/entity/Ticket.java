@@ -1,4 +1,4 @@
-package ru.azzgzz.parking;
+package ru.azzgzz.parking.entity;
 
 public class Ticket {
     private final int ticketId;
@@ -16,24 +16,12 @@ public class Ticket {
         return ticketId;
     }
 
-    public int getCarLineNumber() {
-        return carLineNumber;
-    }
-
     public void setCarLineNumber(int carLineNumber) {
         this.carLineNumber = carLineNumber;
     }
 
-    public String getCarName() {
-        return carName;
-    }
-
     public void setCarName(String carName) {
         this.carName = carName;
-    }
-
-    public boolean isFree() {
-        return isFree;
     }
 
     public void setFree(boolean free) {
@@ -66,10 +54,9 @@ public class Ticket {
     }
 
     /**
-     * Ticket:
      * @return true if change happened
      */
-    public boolean setBusyIfFree(){
+    public boolean setBusyIfFree() {
         synchronized (this) {
             if (isFree) {
                 isFree = false;

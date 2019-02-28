@@ -1,4 +1,4 @@
-package ru.azzgzz.parking;
+package ru.azzgzz.parking.entity;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -6,7 +6,8 @@ public class Car {
 
     private String name;
     private static AtomicInteger totalCarCreated = new AtomicInteger(0);
-    public Car (String name) {
+
+    public Car(String name) {
         this.name = name;
     }
 
