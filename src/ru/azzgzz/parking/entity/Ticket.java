@@ -24,8 +24,14 @@ public class Ticket {
         this.carName = carName;
     }
 
-    public void setFree(boolean free) {
-        isFree = free;
+    public boolean setFreeIfBusy() {
+        synchronized (this) {
+            if (!isFree) {
+                isFree = true;
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isArrived() {

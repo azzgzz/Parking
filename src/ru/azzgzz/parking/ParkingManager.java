@@ -38,12 +38,14 @@ public class ParkingManager {
 
 
     private static void commandSwitcher(String s) {
+
         if (s.equals("l") || s.equals("list")) {
+            System.out.println("List of cars that arrived to their place (after " + parking.getTimeDriveIn() + " sec):");
             parking.getArrivedCarsSet().forEach(System.out::println);
         }
 
         if (s.equals("c")) {
-            System.out.println("Car parked now count: " + parking.getCarCountNow());
+            System.out.println("Car parked now count: " + parking.getBusyTicketsCount());
         }
 
         if (s.matches("p:[\\d]+")) {
@@ -67,20 +69,23 @@ public class ParkingManager {
         if (s.matches("u:\\[(\\d+,?\\s*)+]")) {
             s = s.substring(3, s.length() - 1);
             String[] nums = s.split(",");
+
             int[] unparkId = IntStream.range(0, nums.length)
                     .map(i -> Integer.parseInt(nums[i].trim()))
                     .toArray();
+
             if (checkUnparkRequest(unparkId)) {
                 Thread[] unparkThread = new Thread[unparkId.length];
                 for (int i = 0; i < unparkId.length; i++) {
                     unparkThread[i] = new Thread(new Departure(unparkId[i]));
                 }
-
                 Arrays.stream(unparkThread).forEach(Thread::start);
             }
         }
 
-
+        if (s.matches("[Hh]([Ee][Ll][Pp])?")){
+            printHelp();
+        }
     }
 
 
@@ -125,5 +130,10 @@ public class ParkingManager {
                 .filter(i -> i < 1 || i > parking.getCapacity())
                 .forEach(i -> System.out.println("#fault: Value " + i + " does not correct"));
         return faultCount == 0;
+    }
+
+    private static void printHelp() {
+        System.out.println("---  Help  ---");
+        System.out.println("Available commands: l, c, p:N, u:N, u:[n1, n2, ..., nM]");
     }
 }
