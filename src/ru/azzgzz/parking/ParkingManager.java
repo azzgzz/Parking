@@ -134,6 +134,6 @@ public class ParkingManager {
 
     private static void printHelp() {
         System.out.println("---  Help  ---");
-        System.out.println("Available commands: l, c, p:N, u:N, u:[n1, n2, ..., nM]");
+        System.out.println("Available commands: l, c, p:N, u:N, u:[n1, n2, ..., nM], e");
     }
 }
